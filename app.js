@@ -1,9 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/users-routes");
-
 const HttpError = require("./models/http-errors");
 
 const app = express();
@@ -27,4 +28,15 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "Something went wrong !" });
 });
 
-app.listen(5000);
+const password = process.env.MONGODB_PASSWORD;
+
+mongoose
+  .connect(
+    `mongodb+srv://yanndelaqueze:${password}@yann.68tjrjf.mongodb.net/?retryWrites=true&w=majority`
+  )
+  .then(() => {
+    app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
